@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alexis Tziantopoulos — Portfolio</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.terminal/2.42.0/css/jquery.terminal.min.css"/>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    min-height:100vh; height:100vh;
+    display:flex; flex-direction:column;
+    align-items:center; justify-content:flex-end;
+    font-family:'Inter',sans-serif;
+    overflow:hidden; position:relative;
+  }
+  body::after {
+    content:''; position:fixed; bottom:0; left:0; right:0; height:22%;
+    background:
+      repeating-linear-gradient(90deg,rgba(255,255,255,0.03) 0px,rgba(255,255,255,0.03) 1px,transparent 1px,transparent 60px),
+      repeating-linear-gradient(0deg,rgba(0,0,0,0.06) 0px,rgba(0,0,0,0.06) 1px,transparent 1px,transparent 60px),
+      linear-gradient(180deg,#b8a98a 0%,#a0906f 100%);
+    pointer-events:none; z-index:0;
+  }
+  body::before {
+    content:''; position:fixed; inset:0;
+    background:
+      repeating-linear-gradient(180deg,rgba(255,255,255,0.015) 0px,rgba(255,255,255,0.015) 1px,transparent 1px,transparent 80px),
+      linear-gradient(180deg,#d6cfc4 0%,#c9c0b3 78%,#b8a98a 78%);
+    pointer-events:none; z-index:0;
+  }
+  .baseboard { position:fixed; bottom:22%; left:0; right:0; height:14px; background:linear-gradient(180deg,#e8e0d5 0%,#c8bfb0 60%,#b0a490 100%); border-top:1px solid rgba(255,255,255,0.4); border-bottom:2px solid rgba(0,0,0,0.15); z-index:1; }
+  .certificates { position:fixed; top:4%; right:6%; display:flex; gap:22px; z-index:2; align-items:flex-start; width:33vw; justify-content:flex-end; }
+  .cert { flex:1; max-width:48%; aspect-ratio:4/3; background:linear-gradient(160deg,#fdf8ec 0%,#f2e8ce 100%); border:10px solid #8B6914; box-shadow:6px 8px 28px rgba(0,0,0,0.38),inset 0 0 0 3px #d4af37; display:flex; align-items:center; justify-content:center; padding:8px; position:relative; }
+  .cert::before { content:''; position:absolute; top:-18px; left:50%; transform:translateX(-50%); width:7px; height:12px; background:linear-gradient(180deg,#888,#555); border-radius:2px 2px 0 0; }
+  .cert-inner { border:2px solid #d4af37; width:100%; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; padding:6px; }
+  .cert-top { font-size:9px; font-weight:700; color:#8B6914; letter-spacing:1.5px; text-transform:uppercase; }
+  .cert-title { font-size:13px; font-weight:700; color:#2c1a00; letter-spacing:0.3px; text-align:center; line-height:1.3; }
+  .cert-sub { font-size:10px; color:#5a3e00; font-style:italic; text-align:center; }
+  .cert-name { font-size:9px; color:#666; margin-top:2px; font-family:serif; font-style:italic; }
+  .cert-seal { margin-top:5px; width:22px; height:22px; background:radial-gradient(circle at 40% 40%,#f5d060,#b8860b,#8B6914); border-radius:50%; box-shadow:0 0 6px rgba(180,140,20,0.7),inset 0 1px 3px rgba(255,255,255,0.4); }
+  .project-shelf { position:fixed; top:28%; left:2%; width:200px; z-index:2; }
+  .project-shelf .shelf-board { width:100%; height:13px; background:linear-gradient(180deg,#c8a87a 0%,#a07850 60%,#8a6540 100%); border-radius:2px 2px 0 0; box-shadow:0 4px 12px rgba(0,0,0,0.3); position:relative; }
+  .project-shelf .shelf-board::before { content:''; position:absolute; bottom:-26px; left:12px; right:12px; height:26px; background:linear-gradient(180deg,#9a7850 0%,#805a30 100%); clip-path:polygon(5% 0%,95% 0%,88% 100%,12% 100%); }
+  .pbooks { display:flex; align-items:flex-end; gap:8px; padding:0 10px; position:absolute; bottom:13px; left:0; }
+  .pbook { width:34px; border-radius:2px 4px 4px 2px; box-shadow:3px 0 7px rgba(0,0,0,0.4); position:relative; display:flex; align-items:center; justify-content:center; overflow:hidden; }
+  .pbook::after { content:''; position:absolute; top:0; left:0; width:5px; height:100%; background:rgba(0,0,0,0.2); }
+  .pbook span { writing-mode:vertical-rl; transform:rotate(180deg); font-size:9px; font-family:'Inter',sans-serif; font-weight:700; color:rgba(255,255,255,0.95); letter-spacing:0.7px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-height:90%; padding:0 3px; text-shadow:0 1px 3px rgba(0,0,0,0.5); }
+  .pb1{height:130px;background:linear-gradient(180deg,#7b2ff7,#5a1db5);}
+  .pb2{height:118px;background:linear-gradient(180deg,#c0392b,#8e1c12);}
+  .pb3{height:140px;background:linear-gradient(180deg,#1a7a6e,#0f4f47);}
+  .desk { position:relative; z-index:10; width:93vw; max-width:1400px; display:flex; flex-direction:column; align-items:center; }
+  .desk-surface { width:100%; height:32px; background: repeating-linear-gradient(90deg,rgba(255,255,255,0.04) 0px,rgba(255,255,255,0.04) 1px,transparent 1px,transparent 30px), linear-gradient(180deg,#c8a06a 0%,#b08040 40%,#a07030 100%); border-radius:4px 4px 0 0; border-top:2px solid rgba(255,255,255,0.25); box-shadow:0 -6px 30px rgba(0,0,0,0.2),inset 0 2px 6px rgba(255,255,255,0.15); position:relative; }
+  .desk-surface::before { content:''; position:absolute; inset:0; background:repeating-linear-gradient(92deg,transparent 0px,transparent 18px,rgba(0,0,0,0.04) 18px,rgba(0,0,0,0.04) 20px,transparent 20px,transparent 45px,rgba(255,255,255,0.04) 45px,rgba(255,255,255,0.04) 47px); border-radius:inherit; }
+  .desk-front { width:100%; height:18px; background:repeating-linear-gradient(92deg,transparent 0px,transparent 28px,rgba(0,0,0,0.04) 28px,rgba(0,0,0,0.04) 30px), linear-gradient(180deg,#8a6028 0%,#6a4810 100%); box-shadow:0 8px 20px rgba(0,0,0,0.35); }
+  .desk-items { position:absolute; bottom:32px; left:28px; display:flex; align-items:flex-end; gap:12px; z-index:11; }
+  .mug { display:flex; flex-direction:column; align-items:center; position:relative; }
+  .mug-steam { display:flex; gap:5px; margin-bottom:3px; }
+  .mug-steam span { width:3px; height:14px; background:rgba(255,255,255,0.5); border-radius:2px; animation:steam 2s ease-in-out infinite; }
+  .mug-steam span:nth-child(2) { animation-delay:.4s; height:20px; }
+  .mug-steam span:nth-child(3) { animation-delay:.8s; }
+  @keyframes steam { 0%,100%{opacity:.3;transform:translateY(0) scaleX(1);}50%{opacity:.7;transform:translateY(-8px) scaleX(1.3);} }
+  .mug-body { width:52px; height:56px; background:linear-gradient(135deg,#fff,#e0e0e0); border-radius:4px 4px 10px 10px; position:relative; box-shadow:3px 5px 14px rgba(0,0,0,0.25); }
+  .mug-body::before { content:''; position:absolute; right:-14px; top:12px; width:14px; height:26px; border:4px solid #d8d8d8; border-left:none; border-radius:0 12px 12px 0; }
+  .mug-body::after { content:'☕'; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:20px; }
+  .desk-content { position:absolute; bottom:50px; left:50%; transform:translateX(-50%); display:flex; flex-direction:column; align-items:center; z-index:11; width:93vw; max-width:1400px; }
+  .hero-text { text-align:center; margin-bottom:12px; }
+  .hero-text h1 { font-size:1.7rem; font-weight:700; color:#1a1a2e; letter-spacing:-0.5px; text-shadow:0 1px 3px rgba(255,255,255,0.5); }
+  .hero-text h1 span { color:#6c63ff; }
+  .hero-text p { margin-top:4px; font-size:.82rem; color:#555; font-weight:300; letter-spacing:.5px; }
+  .computer { display:flex; flex-direction:column; align-items:center; width:100%; }
+  .monitor { width:100%; background:linear-gradient(180deg,#2c2c30 0%,#222226 100%); border-radius:14px 14px 5px 5px; padding:14px 14px 10px; box-shadow:0 0 0 1.5px #111,0 -2px 0 rgba(255,255,255,0.05) inset,0 40px 100px rgba(0,0,0,.5),0 10px 30px rgba(0,0,0,.3); position:relative; }
+  .monitor::before { content:''; display:block; width:7px; height:7px; background:#333; border-radius:50%; margin:0 auto 10px; box-shadow:inset 0 0 0 2px #444,0 0 6px rgba(108,99,255,0.2); }
+  .screen { background:#0d1117; border-radius:5px; overflow:hidden; height:62vh; display:flex; flex-direction:column; border:1.5px solid #0a0a0a; box-shadow:inset 0 0 60px rgba(0,0,0,0.5),0 0 0 1px rgba(255,255,255,0.03); }
+  .titlebar { display:flex; align-items:center; justify-content:space-between; padding:0 10px; height:30px; background:linear-gradient(180deg,#3c3f41 0%,#313335 100%); border-bottom:1px solid #1a1a1a; flex-shrink:0; user-select:none; position:relative; }
+  .titlebar-title { font-size:11px; color:#bbb; font-family:monospace; letter-spacing:.5px; position:absolute; left:50%; transform:translateX(-50%); }
+  .wm-buttons { display:flex; gap:4px; margin-left:auto; }
+  .wm-btn { width:17px;height:17px;border-radius:3px;border:none;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;color:rgba(0,0,0,0.6);cursor:pointer;transition:filter .15s;box-shadow:0 1px 2px rgba(0,0,0,0.4),inset 0 1px 0 rgba(255,255,255,0.15); }
+  .wm-btn:hover { filter:brightness(1.2); }
+  .wm-minimize { background:linear-gradient(180deg,#febc2e,#e5a010); }
+  .wm-maximize { background:linear-gradient(180deg,#28c840,#18a030); }
+  .wm-close { background:linear-gradient(180deg,#ff5f57,#e03a32); }
+
+  /* ── MENUBAR ── */
+  .menubar { display:flex; align-items:center; gap:2px; padding:0 8px; height:22px; background:#2b2b2b; border-bottom:1px solid #1a1a1a; flex-shrink:0; position:relative; z-index:100; }
+  .menu-item { position:relative; }
+  .menu-item > span {
+    font-size:10px; color:#ccc; font-family:monospace;
+    padding:3px 8px; border-radius:3px; cursor:default;
+    display:block; user-select:none;
+    transition: background .1s;
+  }
+  .menu-item > span:hover,
+  .menu-item.open > span { background:rgba(108,99,255,0.35); color:#fff; }
+
+  /* Dropdown panel */
+  .dropdown {
+    display:none; position:absolute; top:100%; left:0;
+    min-width:210px;
+    background:#1e1e22;
+    border:1px solid #3a3a3f;
+    border-radius:0 4px 4px 4px;
+    box-shadow:0 8px 28px rgba(0,0,0,0.6);
+    z-index:9999;
+    padding:4px 0;
+  }
+  .menu-item.open .dropdown { display:block; }
+
+  .dropdown li {
+    list-style:none;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:4px 14px;
+    font-size:11px; font-family:monospace; color:#ccc;
+    cursor:default; white-space:nowrap;
+    transition:background .1s;
+    gap:24px;
+  }
+  .dropdown li:hover { background:rgba(108,99,255,0.3); color:#fff; }
+  .dropdown li.disabled { color:#555; cursor:not-allowed; }
+  .dropdown li.disabled:hover { background:transparent; color:#555; }
+  .dropdown hr {
+    border:none; border-top:1px solid #3a3a3f;
+    margin:4px 0;
+  }
+  .dropdown li .shortcut { color:#666; font-size:10px; }
+  .dropdown li:hover .shortcut { color:#aaa; }
+
+  #term { flex:1; overflow:hidden; }
+  .terminal { background:transparent !important; height:100% !important; padding:4px 12px !important; }
+  .terminal .cmd, .terminal-output { font-size:14px !important; line-height:1.75 !important; }
+  .chin { width:100%; height:26px; background:linear-gradient(180deg,#222226 0%,#1a1a1e 100%); border-radius:0 0 5px 5px; display:flex; align-items:center; justify-content:center; box-shadow:0 6px 16px rgba(0,0,0,.3); }
+  .chin::after { content:''; width:56px; height:3px; background:#333; border-radius:2px; }
+  .neck { width:14%; height:36px; background:linear-gradient(180deg,#c8c8ce 0%,#aaaaB2 100%); clip-path:polygon(28% 0%,72% 0%,82% 100%,18% 100%); box-shadow:0 4px 8px rgba(0,0,0,.2); }
+  .base-plate { width:28%; height:18px; background:linear-gradient(180deg,#c0c0c8 0%,#a8a8b0 100%); border-radius:0 0 50px 50px; box-shadow:0 6px 20px rgba(0,0,0,.2); }
+  .hint { position:fixed;bottom:14px;left:50%;transform:translateX(-50%);font-size:.72rem;color:rgba(100,80,50,0.7);letter-spacing:.4px;z-index:20;white-space:nowrap; }
+  .hint kbd { background:#e4ddd0;color:#6a5030;border-radius:4px;padding:1px 6px;font-family:monospace;font-size:.72rem;border-bottom:2px solid #c8b898; }
+  .monitor-glow { position:fixed;top:40%;left:50%;transform:translate(-50%,-50%);width:70vw;height:50vh;background:radial-gradient(ellipse,rgba(108,99,255,0.07) 0%,transparent 70%);pointer-events:none;z-index:9; }
+</style>
+</head>
+<body>
+
+<div class="baseboard"></div>
+
+<div class="project-shelf">
+  <div class="pbooks">
+    <div class="pbook pb1"><span>DOMI Blockchain</span></div>
+    <div class="pbook pb2"><span>Security Layer · BC</span></div>
+    <div class="pbook pb3"><span>Solar System Sim</span></div>
+  </div>
+  <div class="shelf-board"></div>
+</div>
+
+<div class="certificates">
+  <div class="cert"><div class="cert-inner"><div class="cert-top">Certificate</div><div class="cert-title">Bachelor of Science</div><div class="cert-sub">Computer Science</div><div class="cert-name">Alexis Tziantopoulos</div><div class="cert-seal"></div></div></div>
+  <div class="cert"><div class="cert-inner"><div class="cert-top">CompTIA</div><div class="cert-title">CySA+</div><div class="cert-sub">Cybersecurity Analyst+</div><div class="cert-name">Alexis Tziantopoulos</div><div class="cert-seal"></div></div></div>
+</div>
+
+<div class="monitor-glow"></div>
+
+<div class="desk">
+  <div class="desk-content">
+    <div class="hero-text">
+      <h1>Alexis <span>Tziantopoulos</span></h1>
+      <p>Security Engineer · Developer · SOC Analyst</p>
+    </div>
+    <div class="computer">
+      <div class="monitor">
+        <div class="screen">
+          <div class="titlebar">
+            <span class="titlebar-title">bash — soc@tzialexis:~</span>
+            <div class="wm-buttons">
+              <button class="wm-btn wm-minimize">─</button>
+              <button class="wm-btn wm-maximize">□</button>
+              <button class="wm-btn wm-close">✕</button>
+            </div>
+          </div>
+
+          <!-- MENUBAR -->
+          <div class="menubar">
+
+            <div class="menu-item" id="m-file">
+              <span>File</span>
+              <ul class="dropdown">
+                <li data-action="new-tab">New Tab <span class="shortcut">Ctrl+Shift+T</span></li>
+                <li data-action="new-win">New Window <span class="shortcut">Ctrl+Shift+N</span></li>
+                <hr>
+                <li data-action="save">Save Output As… <span class="shortcut">Ctrl+Shift+S</span></li>
+                <hr>
+                <li data-action="close-tab">Close Tab <span class="shortcut">Ctrl+Shift+W</span></li>
+                <li data-action="quit">Quit <span class="shortcut">Ctrl+Q</span></li>
+              </ul>
+            </div>
+
+            <div class="menu-item" id="m-edit">
+              <span>Edit</span>
+              <ul class="dropdown">
+                <li data-action="copy">Copy <span class="shortcut">Ctrl+Shift+C</span></li>
+                <li data-action="paste">Paste <span class="shortcut">Ctrl+Shift+V</span></li>
+                <li data-action="select-all">Select All <span class="shortcut">Ctrl+Shift+A</span></li>
+                <hr>
+                <li data-action="find">Find… <span class="shortcut">Ctrl+Shift+F</span></li>
+                <hr>
+                <li data-action="clear-scrollback">Clear Scrollback</li>
+                <li data-action="reset">Reset Terminal</li>
+              </ul>
+            </div>
+
+            <div class="menu-item" id="m-view">
+              <span>View</span>
+              <ul class="dropdown">
+                <li data-action="zoom-in">Zoom In <span class="shortcut">Ctrl++</span></li>
+                <li data-action="zoom-out">Zoom Out <span class="shortcut">Ctrl+-</span></li>
+                <li data-action="zoom-reset">Normal Size <span class="shortcut">Ctrl+0</span></li>
+                <hr>
+                <li data-action="fullscreen">Toggle Full Screen <span class="shortcut">F11</span></li>
+                <hr>
+                <li data-action="toggle-scrollbar">Show Scrollbar</li>
+                <li data-action="toggle-menubar">Hide Menubar <span class="shortcut">F10</span></li>
+              </ul>
+            </div>
+
+            <div class="menu-item" id="m-terminal">
+              <span>Terminal</span>
+              <ul class="dropdown">
+                <li data-action="set-title">Set Title…</li>
+                <hr>
+                <li data-action="bash">Change Shell → bash</li>
+                <li data-action="zsh">Change Shell → zsh</li>
+                <li data-action="fish">Change Shell → fish</li>
+                <hr>
+                <li data-action="profile">Edit Profile…</li>
+                <li data-action="prefs">Preferences…</li>
+              </ul>
+            </div>
+
+            <div class="menu-item" id="m-help">
+              <span>Help</span>
+              <ul class="dropdown">
+                <li data-action="manual">Terminal Manual <span class="shortcut">F1</span></li>
+                <li data-action="keybinds">Keyboard Shortcuts</li>
+                <hr>
+                <li data-action="about">About</li>
+              </ul>
+            </div>
+
+          </div>
+          <!-- /MENUBAR -->
+
+          <div id="term"></div>
+        </div>
+      </div>
+      <div class="chin"></div>
+      <div class="neck"></div>
+      <div class="base-plate"></div>
+    </div>
+  </div>
+
+  <div class="desk-surface">
+    <div class="desk-items">
+      <div class="mug">
+        <div class="mug-steam"><span></span><span></span><span></span></div>
+        <div class="mug-body"></div>
+      </div>
+    </div>
+  </div>
+  <div class="desk-front"></div>
+</div>
+
+<p class="hint">Type <kbd>help</kbd> and press Enter to get started</p>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.terminal/2.42.0/js/jquery.terminal.min.js"></script>
+<script>
+/* ── MENU LOGIC ── */
+
+
+document.querySelectorAll('.menu-item > span').forEach(btn => {
+  btn.addEventListener('click', e => {
+    e.stopPropagation();
+    const item = btn.parentElement;
+    const wasOpen = item.classList.contains('open');
+    document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('open'));
+    if (!wasOpen) item.classList.add('open');
+  });
+});
+
+document.addEventListener('click', () => {
+  document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('open'));
+});
+
+document.querySelectorAll('.dropdown li').forEach(li => {
+  li.addEventListener('click', e => {
+    e.stopPropagation();
+    document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('open'));
+  });
+});
+
+/* ── TERMINAL ── */
+const greet = `
+[[;#6c63ff;] █████╗  ██╗      ███████╗██╗  ██╗██╗███████╗]
+[[;#7c73ff;]██╔══██╗ ██║      ██╔════╝╚██╗██╔╝██║██╔════╝]
+[[;#8c83ff;]███████║ ██║      █████╗   ╚███╔╝ ██║███████╗]
+[[;#9c93ff;]██╔══██║ ██║      ██╔══╝   ██╔██╗ ██║╚════██║]
+[[;#aca3ff;]██║  ██║ ███████╗ ███████╗██╔╝ ██╗██║███████║]
+[[;#bcb3ff;]╚═╝  ╚═╝ ╚══════╝ ╚══════╝╚═╝  ╚═╝╚═╝╚══════╝  [[;#555;]alexis.sh v1.0]]
+
+[[;#888;]Initialising SOC environment...] [[;#a8ff78;][OK]]
+[[;#888;]Loading threat intelligence feeds...] [[;#a8ff78;][OK]]
+[[;#888;]Type] [[;#6c63ff;]help] [[;#888;]to list available commands.]
+`;
+
+$('#term').terminal({
+  help() {
+    this.echo(`
+[[;#6c63ff;]┌─ Available Commands ────────────────────────────────┐]
+
+  [[;#ff6b6b;]whoami]      — operator identity & current status
+  [[;#ffb347;]threat-intel]— MITRE ATT&CK techniques & tooling
+  [[;#a8ff78;]triage]      — incident response playbook
+  [[;#6c63ff;]stack]       — defensive & dev toolset
+  [[;#c084fc;]ops]         — selected security operations & projects
+  [[;#38bdf8;]certs]       — certifications & education
+  [[;#888;]contact]     — secure comms & links
+  [[;#555;]clear]       — clear terminal
+
+[[;#6c63ff;]└─────────────────────────────────────────────────────┘]
+`);
+  },
+  whoami() {
+    this.echo(`
+[[;#6c63ff;]┌─ Operator Profile ──────────────────────────────────┐]
+[[;#6c63ff;]│]                                                      [[;#6c63ff;]│]
+[[;#6c63ff;]│]  [[;#888;]Handle   :] [[;#fff;]Alexis Tziantopoulos]               [[;#6c63ff;]│]
+[[;#6c63ff;]│]  [[;#888;]Role     :] [[;#a8ff78;]Security Engineer / SOC Analyst]   [[;#6c63ff;]│]
+[[;#6c63ff;]│]  [[;#888;]Location :] [[;#fff;]Zürich, Switzerland 🇨🇭]             [[;#6c63ff;]│]
+[[;#6c63ff;]│]  [[;#888;]Clearance:] [[;#ffb347;]Purple Team Operator]              [[;#6c63ff;]│]
+[[;#6c63ff;]│]  [[;#888;]Status   :] [[;#a8ff78;]● AVAILABLE FOR HIRE]              [[;#6c63ff;]│]
+[[;#6c63ff;]│]                                                      [[;#6c63ff;]│]
+[[;#6c63ff;]│]  [[;#ccc;]I help organisations harden infrastructure,]       [[;#6c63ff;]│]
+[[;#6c63ff;]│]  [[;#ccc;]detect adversaries, and automate response.]        [[;#6c63ff;]│]
+[[;#6c63ff;]│]                                                      [[;#6c63ff;]│]
+[[;#6c63ff;]│]  [[;#888;]Open to:] [[;#a8ff78;]freelance · full-time · consulting] [[;#6c63ff;]│]
+[[;#6c63ff;]└─────────────────────────────────────────────────────┘]
+`);
+  },
+  'threat-intel'() {
+    this.echo(`
+[[;#ff6b6b;][ Threat Intelligence & Adversary Coverage ]]
+
+  [[;#888;]Frameworks  ]  [[;#fff;]MITRE ATT&CK · OWASP Top 10 · Kill Chain]
+  [[;#888;]Tactics     ]  [[;#ffb347;]Initial Access · Lateral Movement · Exfiltration]
+  [[;#888;]Hunt Tools  ]  [[;#fff;]Sigma Rules · YARA · Sysmon · Velociraptor]
+  [[;#888;]Intel Feeds ]  [[;#fff;]OTX · VirusTotal · Shodan · AbuseIPDB]
+  [[;#888;]Malware Triage] [[;#fff;]Static/Dynamic analysis · Sandbox detonation]
+  [[;#888;]Coverage    ]  [[;#a8ff78;]Windows · Linux · Cloud (AWS/Azure/GCP)]
+`);
+  },
+  triage() {
+    this.echo(`
+[[;#ffb347;][ Incident Response Playbook ]]
+
+  [[;#a8ff78;]Phase 1 — Identification]
+  [[;#555;]  ──────────────────────────────────────────]
+  [[;#888;]  ›] [[;#ccc;]Ingest alerts from SIEM · correlate IOCs]
+  [[;#888;]  ›] [[;#ccc;]Identify affected assets & blast radius]
+  [[;#888;]  ›] [[;#ccc;]Classify severity: P1 / P2 / P3]
+
+  [[;#a8ff78;]Phase 2 — Containment]
+  [[;#555;]  ──────────────────────────────────────────]
+  [[;#888;]  ›] [[;#ccc;]Isolate host · revoke credentials]
+  [[;#888;]  ›] [[;#ccc;]Block C2 at firewall & DNS layer]
+  [[;#888;]  ›] [[;#ccc;]Snapshot memory & disk for forensics]
+
+  [[;#a8ff78;]Phase 3 — Eradication & Recovery]
+  [[;#555;]  ──────────────────────────────────────────]
+  [[;#888;]  ›] [[;#ccc;]Remove persistence mechanisms]
+  [[;#888;]  ›] [[;#ccc;]Patch & harden · restore from clean backup]
+  [[;#888;]  ›] [[;#ccc;]Debrief & update detection rules]
+`);
+  },
+  stack() {
+    this.echo(`
+[[;#6c63ff;][ Defensive & Development Stack ]]
+
+  [[;#888;]SIEM / SOAR  ]  [[;#a8ff78;]Elastic · Splunk · Microsoft Sentinel · Cortex XSOAR]
+  [[;#888;]EDR / XDR    ]  [[;#a8ff78;]CrowdStrike · Defender for Endpoint · SentinelOne]
+  [[;#888;]Network      ]  [[;#a8ff78;]Wireshark · Zeek · Suricata · pfSense]
+  [[;#888;]Languages    ]  [[;#a8ff78;]Python · PowerShell · Bash · KQL · JavaScript]
+  [[;#888;]Cloud        ]  [[;#a8ff78;]AWS Security Hub · Azure Defender · GCP SCC]
+  [[;#888;]Dev & Infra  ]  [[;#a8ff78;]Docker · Git · React · Node.js]
+  [[;#888;]Red Team     ]  [[;#a8ff78;]Metasploit · Burp Suite · Nmap · BloodHound]
+`);
+  },
+  ops() {
+    this.echo(`
+[[;#c084fc;][ Security Operations & Projects ]]
+
+  [[;#fff;]01.] [[;#a8ff78;]DOMI Blockchain]
+      [[;#888;]Custom blockchain implementation with DOMI consensus protocol.]
+      [[;#555;]    Tags: distributed systems · cryptography · Solidity]
+
+  [[;#fff;]02.] [[;#a8ff78;]Security Layer for Blockchain]
+      [[;#888;]Hardened security layer with threat detection & integrity]
+      [[;#888;]    checks for blockchain networks.]
+      [[;#555;]    Tags: IDS · smart contract auditing · anomaly detection]
+
+  [[;#fff;]03.] [[;#a8ff78;]Solar System Simulator]
+      [[;#888;]Interactive 3D simulation using real orbital mechanics.]
+      [[;#555;]    Tags: Three.js · physics engine · WebGL]
+`);
+  },
+  certs() {
+    this.echo(`
+[[;#38bdf8;][ Certifications & Education ]]
+
+  [[;#a8ff78;]✔] [[;#fff;]CompTIA CySA+]         [[;#888;]Cybersecurity Analyst+]
+  [[;#a8ff78;]✔] [[;#fff;]B.Sc. Computer Science] [[;#888;]University degree]
+
+  [[;#888;]In progress / target:]
+  [[;#ffb347;]◎] [[;#fff;]CompTIA Security+]
+  [[;#ffb347;]◎] [[;#fff;]PJPT / PNPT]           [[;#888;](TCM Security)]
+  [[;#ffb347;]◎] [[;#fff;]AWS Security Specialty]
+`);
+  },
+  contact() {
+    this.echo(`
+[[;#38bdf8;][ Secure Comms ]]
+
+  [[;#888;]Email   ]  [[;#a8ff78;]root@tzialexis.sh]
+  [[;#888;]GitHub  ]  [[;#a8ff78;]github.com/johndoe]
+  [[;#888;]LinkedIn]  [[;#a8ff78;]linkedin.com/in/johndoe]
+  [[;#888;]Twitter ]  [[;#a8ff78;]@johndoe]
+
+  [[;#555;]PGP fingerprint available on request.]
+`);
+  },
+  clear() { this.clear(); }
+}, {
+  greetings: greet,
+  prompt: '[[;#ff6b6b;]soc@tzialexis] [[;#555;]:] [[;#6c63ff;]~] [[;#fff;]$] ',
+  checkArity: false,
+  scrollOnEcho: true,
+  onUnknownCommand(cmd) {
+    this.echo(`[[;#ff6b6b;][!] Unknown command:] [[;#fff;]${cmd}]\n[[;#555;]    No matching playbook found. Try] [[;#a8ff78;]help][[;#555;].]`);
+  }
+});
+</script>
+</body>
+</html>
