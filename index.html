@@ -51,6 +51,8 @@
     .pbook { width:34px; border-radius:2px 4px 4px 2px; box-shadow:3px 0 7px rgba(0,0,0,0.4); position:relative; display:flex; align-items:center; justify-content:center; overflow:hidden; }
     .pbook::after { content:''; position:absolute; top:0; left:0; width:5px; height:100%; background:rgba(0,0,0,0.2); }
     .pbook span { writing-mode:vertical-rl; transform:rotate(180deg); font-size:9px; font-family:'Inter',sans-serif; font-weight:700; color:rgba(255,255,255,0.95); letter-spacing:0.7px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-height:90%; padding:0 3px; text-shadow:0 1px 3px rgba(0,0,0,0.5); }
+    .pbook:hover { transform:translateY(-4px); filter:brightness(1.15); }
+    .pbook { transition: transform 0.2s ease, filter 0.2s ease; }
     .pb1{height:130px;background:linear-gradient(180deg,#7b2ff7,#5a1db5);}
     .pb2{height:118px;background:linear-gradient(180deg,#c0392b,#8e1c12);}
     .pb3{height:140px;background:linear-gradient(180deg,#1a7a6e,#0f4f47);}
@@ -210,6 +212,123 @@
       border-radius:2px 2px 0 0;
     }
 
+    /* ── PROJECT OVERLAY ── */
+    .project-overlay {
+      position:absolute; inset:0; z-index:300;
+      background:rgba(0,0,0,0.5);
+      display:flex; align-items:center; justify-content:center;
+      opacity:0; pointer-events:none;
+      transition: opacity 0.3s ease;
+    }
+    .project-overlay.active { opacity:1; pointer-events:auto; }
+
+    .project-file {
+      width:88%; height:88%;
+      background:linear-gradient(180deg,#fefefe 0%,#f7f5f0 100%);
+      border-radius:8px;
+      box-shadow: 0 12px 48px rgba(0,0,0,0.5), 0 0 0 1px rgba(0,0,0,0.08);
+      display:flex; flex-direction:column;
+      overflow:hidden;
+      transform: translateY(30px) scale(0.95);
+      transition: transform 0.35s cubic-bezier(0.16,1,0.3,1);
+    }
+    .project-overlay.active .project-file {
+      transform: translateY(0) scale(1);
+    }
+
+    .project-file-header {
+      display:flex; align-items:center; justify-content:space-between;
+      padding:10px 16px;
+      background:linear-gradient(180deg,#f0eee8 0%,#e8e4dc 100%);
+      border-bottom:1px solid #d4d0c8;
+      flex-shrink:0;
+    }
+    .project-file-title {
+      font-size:13px; font-weight:700; color:#2c2c2c;
+      letter-spacing:-0.2px;
+      display:flex; align-items:center; gap:8px;
+    }
+    .project-file-title::before {
+      content:'📄'; font-size:16px;
+    }
+    .project-file-close {
+      width:22px; height:22px; border-radius:4px;
+      border:1px solid #c0b8a8; background:linear-gradient(180deg,#f5f0e8,#e0dbd0);
+      color:#555; font-size:13px; font-weight:700;
+      cursor:pointer; display:flex; align-items:center; justify-content:center;
+      transition: background 0.15s;
+    }
+    .project-file-close:hover { background:#ddd; }
+
+    .project-file-body {
+      flex:1; overflow-y:auto; padding:24px 28px;
+      font-family:'Inter',sans-serif; color:#2c2c2c;
+      line-height:1.7; font-size:13px;
+    }
+    .project-file-body::-webkit-scrollbar { width:6px; }
+    .project-file-body::-webkit-scrollbar-track { background:#f0ede5; }
+    .project-file-body::-webkit-scrollbar-thumb { background:#c8c0b0; border-radius:3px; }
+
+    .project-file-body h1 {
+      font-size:22px; font-weight:700; color:#1a1a2e;
+      margin:0 0 4px; letter-spacing:-0.5px;
+    }
+    .project-file-body .pf-grade {
+      display:inline-block; background:#e8f5e9; color:#2e7d32;
+      font-size:11px; font-weight:700; padding:2px 10px;
+      border-radius:20px; margin-bottom:16px;
+    }
+    .project-file-body h2 {
+      font-size:14px; font-weight:700; color:#444;
+      margin:20px 0 8px; padding-bottom:4px;
+      border-bottom:1px solid #e8e4dc;
+    }
+    .project-file-body p { margin:0 0 10px; color:#444; }
+    .project-file-body ul { margin:0 0 10px; padding-left:20px; }
+    .project-file-body li { margin:0 0 4px; color:#444; }
+    .project-file-body .pf-tags {
+      display:flex; flex-wrap:wrap; gap:6px; margin-top:16px;
+    }
+    .project-file-body .pf-tag {
+      background:#eee8d8; color:#6a5a3a; font-size:11px;
+      padding:3px 10px; border-radius:4px; font-weight:600;
+    }
+    .project-file-body .pf-link {
+      display:inline-flex; align-items:center; gap:6px;
+      margin-top:14px; padding:6px 14px;
+      background:#1a1a2e; color:#fff; font-size:12px;
+      font-weight:600; border-radius:6px; text-decoration:none;
+      transition: background 0.15s;
+    }
+    .project-file-body .pf-link:hover { background:#2a2a4e; }
+    .project-file-body code {
+      background:#eee8d8; color:#5a4a2a; font-family:monospace;
+      font-size:12px; padding:1px 5px; border-radius:3px;
+    }
+    .project-file-body pre {
+      background:#1a1a2e; color:#a8ff78; font-family:monospace;
+      font-size:12px; padding:12px 14px; border-radius:6px;
+      overflow-x:auto; margin:8px 0 12px; line-height:1.6;
+    }
+    .project-file-body pre code {
+      background:none; color:inherit; padding:0;
+    }
+    .project-file-body table {
+      width:100%; border-collapse:collapse; margin:8px 0 12px;
+      font-size:12px;
+    }
+    .project-file-body th {
+      text-align:left; padding:6px 10px; background:#eee8d8;
+      border:1px solid #d4d0c8; font-weight:700; color:#2c2c2c;
+    }
+    .project-file-body td {
+      padding:6px 10px; border:1px solid #e8e4dc; color:#444;
+    }
+    .project-file-body td code { font-size:11px; }
+    .project-file-body hr {
+      border:none; border-top:1px solid #e8e4dc; margin:16px 0;
+    }
+
     .monitor-glow {
       position:fixed; top:40%; left:50%; transform:translate(-50%,-50%);
       width:70vw; height:50vh;
@@ -253,9 +372,9 @@
 
   <div class="project-shelf">
     <div class="pbooks">
-      <div class="pbook pb1"><span>DOMI Blockchain</span></div>
-      <div class="pbook pb2"><span>Thesis · ML Security</span></div>
-      <div class="pbook pb3"><span>Solar System Sim</span></div>
+      <div class="pbook pb1" onclick="openProject(3)" style="cursor:pointer" title="Click to view project"><span>DOMI Blockchain</span></div>
+      <div class="pbook pb2" onclick="openProject(1)" style="cursor:pointer" title="Click to view project"><span>Thesis · ML Security</span></div>
+      <div class="pbook pb3" onclick="openProject(4)" style="cursor:pointer" title="Click to view project"><span>Solar System Sim</span></div>
     </div>
     <div class="shelf-board"></div>
   </div>
@@ -341,6 +460,15 @@
               </div>
             </div>
             <div id="term"></div>
+            <div class="project-overlay" id="projectOverlay">
+              <div class="project-file">
+                <div class="project-file-header">
+                  <div class="project-file-title" id="projectFileTitle">README.md</div>
+                  <button class="project-file-close" id="projectClose">✕</button>
+                </div>
+                <div class="project-file-body" id="projectFileBody"></div>
+              </div>
+            </div>
           </div>
           <div class="monitor-led"></div>
         </div>
@@ -460,35 +588,31 @@
       },
 
       projects() {
-        this.echo(`
-[[;#c084fc;]── Projects ──────────────────────────────────────────]
-
-  [[;#fff;]01.] [[;#a8ff78;]Blockchain Data Import Security — Bachelor Thesis (6.0)]
-       [[;#888;]ML-based anomaly detection to secure blockchain data]
-       [[;#888;]imports. Autoencoder identifies manipulated sources.]
-       [[;#555;]Python · ML · Ethereum · Solidity · Autoencoder]
-
-  [[;#fff;]02.] [[;#a8ff78;]Reliable Data Import for Blockchain — Project (5.5)]
-       [[;#888;]ML approach to improve reliability of centralised data]
-       [[;#888;]sources in decentralised networks.]
-       [[;#555;]Python · Machine Learning · REST API]
-
-  [[;#fff;]03.] [[;#a8ff78;]DOMI Blockchain Prototype]
-       [[;#888;]Decentralised online identity blockchain for]
-       [[;#888;]passwordless authentication.]
-       [[;#555;]Rust · Networking · Cryptography]
-
-  [[;#fff;]04.] [[;#a8ff78;]Solar System Simulator — Semester Project (5.0)]
-       [[;#888;]3D simulation based on Kepler's laws. Add custom planets,]
-       [[;#888;]interactive orbital visualisation.]
-       [[;#555;]C# · Unity · TypeScript · Next.js · Tailwind]
-
-  [[;#fff;]05.] [[;#a8ff78;]Tamagotchi on Ethereum — Project (6.0)]
-       [[;#888;]Fully on-chain Tamagotchi game with shop and game logic.]
-       [[;#555;]Solidity · Remix IDE · Ethereum]
-
-[[;#c084fc;]─────────────────────────────────────────────────────]
-`);
+        const self = this;
+        self.echo(`\n[[;#c084fc;]── Projects ──────────────────────────────────────────]\n`);
+        const plist = [
+          { id:1, title:'Blockchain Data Import Security — Bachelor Thesis (6.0)', desc:'ML-based anomaly detection to secure blockchain data\n       imports. Autoencoder identifies manipulated sources.', tags:'Python · ML · Ethereum · Solidity · Autoencoder' },
+          { id:2, title:'Reliable Data Import for Blockchain — Project (5.5)', desc:'ML approach to improve reliability of centralised data\n       sources in decentralised networks.', tags:'Python · Machine Learning · REST API' },
+          { id:3, title:'DOMI Blockchain Prototype', desc:'Decentralised online identity blockchain for\n       passwordless authentication.', tags:'Rust · Networking · Cryptography' },
+          { id:4, title:'Solar System Simulator — Semester Project (5.0)', desc:'3D simulation based on Kepler\'s laws. Add custom planets,\n       interactive orbital visualisation.', tags:'C# · Unity · TypeScript · Next.js · Tailwind' },
+          { id:5, title:'Tamagotchi on Ethereum — Project (6.0)', desc:'Fully on-chain Tamagotchi game with shop and game logic.', tags:'Solidity · Remix IDE · Ethereum' },
+          { id:6, title:'BlurIt — Firefox Extension', desc:'Inspects files for metadata before you upload them.\n       Warns about GPS, author info, and EXIF data.', tags:'JavaScript · WebExtensions · Privacy · EXIF' },
+        ];
+        plist.forEach(p => {
+          const num = String(p.id).padStart(2,'0');
+          const $line = $('<span></span>');
+          $line.append($('<span style="color:#fff">').text('  ' + num + '. '));
+          const $link = $('<span style="color:#a8ff78;cursor:pointer;text-decoration:underline;text-decoration-color:rgba(168,255,120,0.3)">').text(p.title);
+          $link.on('click', () => openProject(p.id));
+          $link.on('mouseenter', function(){ $(this).css('text-decoration-color','#a8ff78'); });
+          $link.on('mouseleave', function(){ $(this).css('text-decoration-color','rgba(168,255,120,0.3)'); });
+          $line.append($link);
+          self.echo($line);
+          self.echo(`       [[;#888;]${p.desc}]`);
+          self.echo(`       [[;#555;]${p.tags}]\n`);
+        });
+        self.echo(`[[;#555;]  ↑ Click a project title to view details]\n`);
+        self.echo(`[[;#c084fc;]─────────────────────────────────────────────────────]\n`);
       },
 
       education() {
@@ -570,6 +694,299 @@
       { text: '', delay: 200 },
       { text: '[[;#888;]Type] [[;#6c63ff;]help] [[;#888;]to list available commands.]', delay: 100 },
     ];
+
+    /* ── PROJECT DETAIL DATA ── */
+    const projectDetails = {
+      1: {
+        file: 'bachelor-thesis/README.md',
+        title: 'Blockchain Data Import Security',
+        grade: '6.0 / 6.0',
+        html: `
+          <h1>Blockchain Data Import Security</h1>
+          <span class="pf-grade">Grade: 6.0 / 6.0</span>
+          <h2>Overview</h2>
+          <p>Bachelor thesis exploring machine learning–based anomaly detection to secure data imports into blockchain systems. The core idea: use an autoencoder neural network to identify manipulated or unreliable external data sources before they get committed on-chain.</p>
+          <h2>Problem</h2>
+          <p>Blockchains rely on external data feeds (oracles) that are inherently centralised. If an attacker compromises the data source, manipulated data gets permanently recorded. This thesis addresses the oracle problem by adding an ML-based verification layer.</p>
+          <h2>Approach</h2>
+          <ul>
+            <li>Trained an autoencoder on historical legitimate data imports</li>
+            <li>The model learns the "normal" pattern of incoming data</li>
+            <li>Anomalous inputs (manipulated sources) trigger high reconstruction error</li>
+            <li>Threshold-based alerting flags suspicious imports before on-chain commit</li>
+          </ul>
+          <h2>Results</h2>
+          <p>The autoencoder successfully detected injected anomalies with high precision, demonstrating that ML-based guards can serve as an effective pre-commit filter for blockchain data imports.</p>
+          <div class="pf-tags">
+            <span class="pf-tag">Python</span>
+            <span class="pf-tag">Machine Learning</span>
+            <span class="pf-tag">Ethereum</span>
+            <span class="pf-tag">Solidity</span>
+            <span class="pf-tag">Autoencoder</span>
+          </div>
+        `
+      },
+      2: {
+        file: 'reliable-data-import/README.md',
+        title: 'Reliable Data Import for Blockchain',
+        grade: '5.5 / 6.0',
+        html: `
+          <h1>Reliable Data Import for Blockchain</h1>
+          <span class="pf-grade">Grade: 5.5 / 6.0</span>
+          <h2>Overview</h2>
+          <p>A machine learning approach to improve the reliability of centralised data sources feeding into decentralised blockchain networks. Precursor research that laid the foundation for the bachelor thesis.</p>
+          <h2>Problem</h2>
+          <p>Decentralised systems depend on centralised APIs for real-world data. These single points of failure can deliver stale, incorrect, or tampered data — undermining the trust model blockchains are built on.</p>
+          <h2>Approach</h2>
+          <ul>
+            <li>Built a data aggregation pipeline pulling from multiple REST APIs</li>
+            <li>Applied ML models to cross-validate and score source reliability</li>
+            <li>Developed a confidence metric for each data import</li>
+            <li>Low-confidence imports are flagged for manual review or rejection</li>
+          </ul>
+          <div class="pf-tags">
+            <span class="pf-tag">Python</span>
+            <span class="pf-tag">Machine Learning</span>
+            <span class="pf-tag">REST API</span>
+          </div>
+        `
+      },
+      3: {
+        file: 'domi-blockchain/README.md',
+        title: 'DOMI Blockchain Prototype',
+        grade: null,
+        html: `
+          <h1>domi-blockchain</h1>
+          <p>A prototype blockchain written in Rust for decentralized identity (DID). The idea is simple: instead of logging in with a username and password, you own a cryptographic identity that lives on a blockchain. You prove who you are by signing a challenge with your private key &mdash; no password, no central authority.</p>
+          <p><em>This is a prototype, not production software.</em></p>
+          <hr>
+          <h2>What it does</h2>
+          <ul>
+            <li>Generates a unique identity (DID) from your keypair &mdash; mathematically derived, not chosen</li>
+            <li>Registers that identity on a local blockchain</li>
+            <li>Lets you log into a web interface by signing a challenge with your key</li>
+            <li>The blockchain verifies the signature against your registered public key</li>
+          </ul>
+          <p>Your DID looks like this: <code>did:domi:a3f9bc12e8d4c71f...</code></p>
+          <p>It's derived from your public key using SHA256, similar to how Ethereum addresses work. No two people get the same DID unless they have the same keypair &mdash; which is cryptographically impossible in practice.</p>
+          <hr>
+          <h2>How it works</h2>
+          <p>There are two servers:</p>
+          <p><strong>Blockchain server</strong> (port 3000) &mdash; handles the chain itself</p>
+          <ul>
+            <li>Stores DIDs and public keys as blocks</li>
+            <li>Issues challenges for login</li>
+            <li>Verifies signatures</li>
+          </ul>
+          <p><strong>Login server</strong> (port 4000) &mdash; the web UI</p>
+          <ul>
+            <li>Account creation</li>
+            <li>Wallet management</li>
+            <li>Signs challenges and talks to the blockchain server</li>
+          </ul>
+          <p><strong>The login flow:</strong></p>
+          <ul>
+            <li>Create an account &mdash; a keypair is generated, your DID is derived, saved to <code>wallet.json</code>, and registered on the blockchain</li>
+            <li>To log in, your wallet loads from disk, the blockchain issues a challenge, you sign it, the blockchain verifies the signature against your registered public key</li>
+            <li>If it matches, you're in</li>
+          </ul>
+          <hr>
+          <h2>Running it</h2>
+          <p>You need two terminals.</p>
+          <p><strong>Terminal 1 &mdash; start the blockchain server:</strong></p>
+          <pre><code>cargo run --bin server</code></pre>
+          <p><strong>Terminal 2 &mdash; start the login server:</strong></p>
+          <pre><code>cargo run --bin login</code></pre>
+          <p>Then open <code>http://127.0.0.1:4000/login</code> in your browser.</p>
+          <p><strong>First time:</strong> click "Create Account" to generate your identity.<br>
+          <strong>After that:</strong> click "Sign in with Domi" to log in.</p>
+          <hr>
+          <h2>API endpoints (blockchain server)</h2>
+          <table>
+            <thead><tr><th>Method</th><th>Route</th><th>What it does</th></tr></thead>
+            <tbody>
+              <tr><td><code>POST</code></td><td><code>/did/new</code></td><td>Register a new DID</td></tr>
+              <tr><td><code>GET</code></td><td><code>/secret/:did</code></td><td>Get a login challenge</td></tr>
+              <tr><td><code>POST</code></td><td><code>/verify</code></td><td>Verify a signed challenge</td></tr>
+              <tr><td><code>GET</code></td><td><code>/pubkey/:did</code></td><td>Get the public key for a DID</td></tr>
+              <tr><td><code>GET</code></td><td><code>/blockchain</code></td><td>See the full chain</td></tr>
+            </tbody>
+          </table>
+          <hr>
+          <h2>Tech stack</h2>
+          <ul>
+            <li><strong>Rust</strong> &mdash; everything</li>
+            <li><strong>axum + tokio</strong> &mdash; async HTTP servers</li>
+            <li><strong>k256</strong> &mdash; ECDSA cryptography (secp256k1, same curve as Bitcoin/Ethereum)</li>
+            <li><strong>sha2</strong> &mdash; block hashing and DID derivation</li>
+            <li><strong>serde / serde_json</strong> &mdash; serialization</li>
+          </ul>
+          <hr>
+          <h2>Current limitations</h2>
+          <p>This is a prototype. A few things are intentionally left simple:</p>
+          <ul>
+            <li>The blockchain lives in memory &mdash; restarting the server wipes it</li>
+            <li>The wallet file (<code>wallet.json</code>) stores the private key in plain text</li>
+            <li>Only one wallet per machine right now</li>
+            <li>No HTTPS, no sessions, no rate limiting</li>
+          </ul>
+          <hr>
+          <h2>Future plans</h2>
+          <p><strong>Persistence</strong> &mdash; Save the blockchain to disk so it survives restarts. The code for this already exists (<code>save_to_file</code> / <code>load_from_file</code>), it just needs to be wired up.</p>
+          <p><strong>Verifiable Credentials</strong> &mdash; Separate identity from claims. A trusted issuer can sign a credential like "this person is over 18" and attach it to a DID. The verifier never learns who you are, just that the claim is valid (W3C Verifiable Credentials model).</p>
+          <p><strong>Private key encryption</strong> &mdash; The wallet file should be encrypted with a password before anything leaves localhost.</p>
+          <p><strong>Multi-account support</strong> &mdash; One machine = one wallet right now. Should support multiple identities.</p>
+          <p><strong>Browser extension</strong> &mdash; The login popup already mimics how MetaMask works. Next step is a proper extension that holds your wallet and signs challenges without exposing the key to any server.</p>
+          <p><strong>Migrate to Solana or Ethereum</strong> &mdash; For a public, trustless DID registry, anchoring on an existing chain makes more sense than running your own.</p>
+          <div class="pf-tags">
+            <span class="pf-tag">Rust</span>
+            <span class="pf-tag">axum</span>
+            <span class="pf-tag">tokio</span>
+            <span class="pf-tag">k256 / ECDSA</span>
+            <span class="pf-tag">SHA-256</span>
+            <span class="pf-tag">serde</span>
+          </div>
+          <a class="pf-link" href="https://github.com/tzianale/DOMI-Blockchain" target="_blank" rel="noopener">&#8599; View on GitHub</a>
+        `
+      },
+      4: {
+        file: 'solar-system-sim/README.md',
+        title: 'Solar System Simulator',
+        grade: '5.0 / 6.0',
+        html: `
+          <h1>Solar System Simulator</h1>
+          <span class="pf-grade">Grade: 5.0 / 6.0</span>
+          <h2>Overview</h2>
+          <p>An interactive 3D solar system simulation built as a semester project. Planets orbit the sun following Kepler's laws of planetary motion, and users can add custom planets with configurable parameters.</p>
+          <h2>Features</h2>
+          <ul>
+            <li>Realistic orbital mechanics based on Kepler's laws</li>
+            <li>Add custom planets with adjustable mass, radius, and orbit</li>
+            <li>Interactive camera controls — zoom, pan, and rotate</li>
+            <li>Real-time 3D rendering with Unity</li>
+            <li>Web companion interface built with Next.js</li>
+          </ul>
+          <h2>Architecture</h2>
+          <p>The simulation engine runs in Unity (C#), handling physics and rendering. A Next.js web app serves as a companion control panel for configuring planets and simulation parameters via a REST API bridge.</p>
+          <div class="pf-tags">
+            <span class="pf-tag">C#</span>
+            <span class="pf-tag">Unity</span>
+            <span class="pf-tag">TypeScript</span>
+            <span class="pf-tag">Next.js</span>
+            <span class="pf-tag">Tailwind</span>
+          </div>
+        `
+      },
+      5: {
+        file: 'tamagotchi-ethereum/README.md',
+        title: 'Tamagotchi on Ethereum',
+        grade: '6.0 / 6.0',
+        html: `
+          <h1>Tamagotchi on Ethereum</h1>
+          <span class="pf-grade">Grade: 6.0 / 6.0</span>
+          <h2>Overview</h2>
+          <p>A fully on-chain Tamagotchi game running on the Ethereum blockchain. All game logic — feeding, playing, shopping — lives in Solidity smart contracts. No backend, no database, just the blockchain.</p>
+          <h2>Features</h2>
+          <ul>
+            <li>Adopt and name your virtual pet — stored as on-chain state</li>
+            <li>Feed, play with, and care for your Tamagotchi</li>
+            <li>In-game shop to buy items using tokens</li>
+            <li>Pet stats (hunger, happiness, health) decay over time</li>
+            <li>All interactions are blockchain transactions</li>
+          </ul>
+          <h2>Technical Details</h2>
+          <p>The entire game is implemented as a set of interconnected Solidity smart contracts. State management, game loop logic, and the shop economy all run on-chain. Developed and tested using Remix IDE on Ethereum testnets.</p>
+          <div class="pf-tags">
+            <span class="pf-tag">Solidity</span>
+            <span class="pf-tag">Remix IDE</span>
+            <span class="pf-tag">Ethereum</span>
+            <span class="pf-tag">Smart Contracts</span>
+          </div>
+        `
+      },
+      6: {
+        file: 'blurit/README.md',
+        title: 'BlurIt',
+        grade: null,
+        html: `
+          <h1>BlurIt</h1>
+          <p>A Firefox extension that inspects files you select on any webpage and shows you what metadata they contain &mdash; before you upload them. Warns about privacy-sensitive data like GPS coordinates, author identity, and embedded EXIF.</p>
+          <hr>
+          <h2>Features</h2>
+          <ul>
+            <li>Scans files when you select them in any file input on any website</li>
+            <li>Shows metadata in a clean popup with expandable file cards</li>
+            <li>Warns about GPS coordinates, author/artist info, and EXIF data</li>
+            <li>Badge counter on the extension icon shows how many files were scanned on the current page</li>
+            <li>Optional system notifications when metadata is detected</li>
+            <li>Persistent scan history that survives browser restarts</li>
+            <li>Lifetime counter tracking total files scanned</li>
+          </ul>
+          <hr>
+          <h2>Supported Formats</h2>
+          <table>
+            <thead><tr><th>Format</th><th>What it extracts</th></tr></thead>
+            <tbody>
+              <tr><td><strong>JPEG</strong></td><td>EXIF: Make, Model, Software, DateTime, Artist, Copyright, GPS coordinates</td></tr>
+              <tr><td><strong>PNG</strong></td><td>tEXt, iTXt, zTXt text chunks</td></tr>
+              <tr><td><strong>PDF</strong></td><td>Author, Title, Subject, Keywords, Creator, Producer, dates</td></tr>
+              <tr><td><strong>WebP</strong></td><td>EXIF / XMP presence</td></tr>
+              <tr><td><strong>HEIC/HEIF</strong></td><td>File type validation, EXIF presence</td></tr>
+              <tr><td><strong>TIFF</strong></td><td>EXIF presence</td></tr>
+              <tr><td><strong>GIF</strong></td><td>Comment extension blocks</td></tr>
+            </tbody>
+          </table>
+          <hr>
+          <h2>Privacy</h2>
+          <p>All file processing happens entirely in your browser. No data is sent to any server. No network requests are made. Scan history is stored locally using <code>browser.storage.local</code> and can be cleared at any time from the popup.</p>
+          <hr>
+          <h2>Permissions</h2>
+          <ul>
+            <li><strong>storage</strong> &mdash; persist scan history and notification preference across browser restarts</li>
+            <li><strong>notifications</strong> &mdash; optional system notifications when metadata is found (can be toggled off)</li>
+          </ul>
+          <hr>
+          <h2>Install</h2>
+          <p><strong>From AMO:</strong> <a class="pf-link" href="https://addons.mozilla.org/en-US/firefox/addon/blurit/" target="_blank" rel="noopener" style="display:inline-flex;margin:0">&#8599; Install from Firefox Add-ons</a></p>
+          <p><strong>Manual (for development):</strong></p>
+          <ul>
+            <li>Open <code>about:debugging</code> in Firefox</li>
+            <li>Click "This Firefox" &gt; "Load Temporary Add-on"</li>
+            <li>Select the <code>manifest.json</code> file from this directory</li>
+          </ul>
+          <hr>
+          <p><em>License: MIT</em></p>
+          <div class="pf-tags">
+            <span class="pf-tag">JavaScript</span>
+            <span class="pf-tag">WebExtensions</span>
+            <span class="pf-tag">Firefox</span>
+            <span class="pf-tag">Privacy</span>
+            <span class="pf-tag">EXIF</span>
+            <span class="pf-tag">Metadata</span>
+          </div>
+          <a class="pf-link" href="https://github.com/tzianale/BlurIT" target="_blank" rel="noopener">&#8599; View on GitHub</a>
+        `
+      }
+    };
+
+    /* ── OPEN / CLOSE PROJECT OVERLAY ── */
+    function openProject(id) {
+      const p = projectDetails[id];
+      if (!p) return;
+      document.getElementById('projectFileTitle').textContent = p.file;
+      document.getElementById('projectFileBody').innerHTML = p.html;
+      document.getElementById('projectFileBody').scrollTop = 0;
+      document.getElementById('projectOverlay').classList.add('active');
+    }
+
+    document.getElementById('projectClose').addEventListener('click', () => {
+      document.getElementById('projectOverlay').classList.remove('active');
+    });
+    document.getElementById('projectOverlay').addEventListener('click', (e) => {
+      if (e.target === e.currentTarget) {
+        document.getElementById('projectOverlay').classList.remove('active');
+      }
+    });
 
     (async () => {
       term.echo(banner);
